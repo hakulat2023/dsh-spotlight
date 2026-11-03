@@ -1,0 +1,18 @@
+# Changelog
+
+## 1.0.0 — 2026-11-03
+
+Initial public release.
+
+- Spotlight-style command palette in `shell.overlay`, opened by
+  `Cmd/Ctrl+Shift+P` or `/`.
+- Built-in commands for settings, plugins, session search, workspace creation,
+  keyboard shortcuts, new session, archive, compact, left/right columns,
+  workspace files, theme, and language.
+- Shortcut mirror that exposes the shell's configurable shortcut catalog with
+  keycaps and runs entries through the shell registry.
+- Extensible `spotlight` command service with localized title/group/keyword
+  search and focus/scroll management.
+- Owned stylesheet, locale dictionary, commands, shortcuts, and slot entry, all
+  released through Cordis effects.
+- VM-based verification suite and GitHub Actions workflow.
