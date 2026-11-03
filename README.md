@@ -64,8 +64,10 @@ The package is a DSH **bundle**: `package.json` declares `dsh.bundle.patch` and
 ### From GitHub
 
 ```bash
-dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight
+dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.0
 ```
+
+Omit `#v1.0.0` to track the default branch.
 
 ### From a local checkout
 
@@ -281,7 +283,8 @@ GitHub Actions workflow in `.github/workflows/test.yml`.
 For manual verification, boot any profile that composes the bundle:
 
 ```bash
-dsh web --no-open --port 0
+dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.0
+dsh --profile web --no-open --port 0
 ```
 
 Then open the printed URL, press `Cmd/Ctrl+Shift+P`, and check Settings,
