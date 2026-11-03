@@ -13,6 +13,13 @@ English | [中文](README.zh.md)
 
 ![Spotlight palette](docs/spotlight.png)
 
+<details>
+<summary>Dark theme</summary>
+
+![Spotlight palette in dark theme](docs/spotlight-dark.png)
+
+</details>
+
 ## Table of contents
 
 - [What it does](#what-it-does)
@@ -64,10 +71,10 @@ The package is a DSH **bundle**: `package.json` declares `dsh.bundle.patch` and
 ### From GitHub
 
 ```bash
-dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.0
+dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.1
 ```
 
-Omit `#v1.0.0` to track the default branch.
+Omit `#v1.0.1` to track the default branch.
 
 ### From a local checkout
 
@@ -283,7 +290,7 @@ GitHub Actions workflow in `.github/workflows/test.yml`.
 For manual verification, boot any profile that composes the bundle:
 
 ```bash
-dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.0
+dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.1
 dsh --profile web --no-open --port 0
 ```
 

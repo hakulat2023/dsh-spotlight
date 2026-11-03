@@ -11,6 +11,13 @@ DeepSeek Harness 的 Spotlight 风格命令面板。按 `Cmd/Ctrl+Shift+P`（或
 
 ![Spotlight 面板](docs/spotlight.png)
 
+<details>
+<summary>深色模式</summary>
+
+![Spotlight 面板深色模式](docs/spotlight-dark.png)
+
+</details>
+
 ## 目录
 
 - [功能](#功能)
@@ -55,10 +62,10 @@ DeepSeek Harness 的 Spotlight 风格命令面板。按 `Cmd/Ctrl+Shift+P`（或
 ### 从 GitHub 安装
 
 ```bash
-dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.0
+dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.1
 ```
 
-省略 `#v1.0.0` 可跟踪默认分支。
+省略 `#v1.0.1` 可跟踪默认分支。
 
 ### 从本地目录安装
 
@@ -246,7 +253,7 @@ npm test
 手动验证时，启动任意组合了本 bundle 的 profile：
 
 ```bash
-dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.0
+dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.1
 dsh --profile web --no-open --port 0
 ```
 

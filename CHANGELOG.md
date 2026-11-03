@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.1 — 2026-11-03
+
+- Match the palette panel to the DSH input surface with
+  `--dsw-specific-input-major`, so dark mode is no longer washed out.
+- Use `--dsw-alias-interactive-bg-hover` for the selected row; the old layer
+  token matched the new dark panel background.
+- Widen the panel from `560px` to `min(720px, 92vw)`.
+- Refresh the light and dark README screenshots and add a dark-theme preview.
+
 ## 1.0.0 — 2026-11-03
 
 Initial public release.
