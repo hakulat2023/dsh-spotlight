@@ -41,6 +41,12 @@ English | [中文](README.zh.md)
   Keyboard Shortcuts, New Session, Archive Current Session, Compact Session,
   Toggle Sidebar, Toggle Right Sidebar, Workspace Files, theme (dark / light /
   system), and language (English / 中文).
+- **Settings deep links.** Every settings section becomes a `Settings → Section`
+  command (Settings → General, Settings → Models, …) that opens the panel
+  directly on that tab. The section catalog mirrors the shell's
+  `settings.section` slot and refreshes with it, including sections registered
+  by other plugins. When the shell's store handle is unreachable, the command
+  falls back to opening Settings and clicking the section's nav cell.
 - **Shortcut mirror.** Every remaining configurable shell shortcut appears in a
   **Shortcuts** group with its effective keycaps. Running one goes through the
   shell's own shortcut resolution, so rename, fork, split, fullscreen, terminal,
@@ -71,10 +77,10 @@ The package is a DSH **bundle**: `package.json` declares `dsh.bundle.patch` and
 ### From GitHub
 
 ```bash
-dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.2
+dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.3
 ```
 
-Omit `#v1.0.2` to track the default branch.
+Omit `#v1.0.3` to track the default branch.
 
 ### From a local checkout
 
@@ -290,7 +296,7 @@ GitHub Actions workflow in `.github/workflows/test.yml`.
 For manual verification, boot any profile that composes the bundle:
 
 ```bash
-dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.2
+dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.3
 dsh --profile web --no-open --port 0
 ```
 

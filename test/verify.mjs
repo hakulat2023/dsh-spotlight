@@ -202,7 +202,24 @@ function makeContext(document, renderer) {
     commandsExecute: [],
     archiveSession: [],
     effects: [],
+    slotSubscriptions: [],
+    settingsSectionOpen: [],
   };
+
+  /* The settings shell double: what `sidebar.settings` entries expose, with
+   * the same `actions.openSection(id)` face the real shell's store has. */
+  const settingsShell = {
+    actions: {
+      openSection(id) { calls.settingsSectionOpen.push(id); },
+    },
+  };
+  const slotEntries = new Map([
+    ['sidebar.settings', [{ store: { create: () => settingsShell } }]],
+    ['settings.section', [
+      { options: { id: 'general', order: 0, label: '通用' } },
+      { options: { id: 'models', order: 1, label: () => '模型' } },
+    ]],
+  ]);
 
   const dictionaries = new Map();
   const locale = {
@@ -324,6 +341,11 @@ function makeContext(document, renderer) {
       register(meta, component) {
         calls.registeredSlots.push({ meta, component });
         return () => { calls.registeredSlots.pop(); };
+      },
+      entries(name) { return slotEntries.get(name) ?? []; },
+      subscribe(name, listener) {
+        calls.slotSubscriptions.push([name, listener]);
+        return () => { calls.slotSubscriptions = calls.slotSubscriptions.filter((row) => row[1] !== listener); };
       },
     },
   };
@@ -447,7 +469,16 @@ for (const id of ['session.archive', 'sidebar.right.toggle', 'workspace.files'])
 assert.ok(!commands.some((command) => command.id === 'dsh-spotlight.shortcut.page.close'), 'window-closing shortcut stays out of the palette');
 assert.ok(!commands.some((command) => command.id === 'dsh-spotlight.shortcut.browser.refresh'), 'page-refresh shortcut stays out of the palette');
 
+/* Settings sections become one palette command each, localized by the shell's
+ * own labels; running one opens the panel directly on that section. */
+const sectionCommands = commands.filter((command) => command.id.startsWith('dsh-spotlight.settings-section.'));
+assert.deepEqual([...sectionCommands.map((command) => command.title)], ['设置 → 通用', '设置 → 模型'], 'sections sort by order and resolve function labels');
+assert.ok(sectionCommands.every((command) => command.keywords.includes('设置')), 'section commands carry settings keywords');
+assert.ok(environment.calls.slotSubscriptions.some(([name]) => name === 'settings.section'), 'section catalog tracks slot declarations');
+
 const run = (id) => commands.find((command) => command.id === id).run(environment.ctx);
+run('dsh-spotlight.settings-section.models');
+assert.deepEqual(environment.calls.settingsSectionOpen, ['models'], 'section command opens the settings store on that section');
 const registry = environment.shortcuts.registry;
 const invokeBefore = environment.calls.shortcutInvoke.length;
 run('dsh-spotlight.open-settings');

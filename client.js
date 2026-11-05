@@ -231,6 +231,160 @@ window.__ModuleLoader__.load({
     }
 
     /**
+     * Click the settings dialog's nav cell for one section. The nav rail
+     * renders the `settings.section` slot entries sorted by `order`, so the
+     * section's index in that sorted catalog is also its button index in the
+     * dialog's `nav`. Used as the fallback when the settings store handle is
+     * not reachable.
+     */
+    function selectSettingsSectionByIndex(index) {
+      if (typeof document === 'undefined' || !(index >= 0)) return;
+      let attempts = 0;
+      const tryClick = () => {
+        try {
+          for (const dialog of document.querySelectorAll('[role="dialog"]')) {
+            const nav = dialog.querySelector('nav');
+            if (!nav) continue;
+            const buttons = nav.querySelectorAll('button');
+            if (buttons.length > index) { buttons[index].click(); return; }
+          }
+        } catch (e) { /* keep polling while the settings panel mounts */ }
+        attempts += 1;
+        if (attempts < 20 && typeof setTimeout === 'function') setTimeout(tryClick, 25);
+      };
+      if (typeof setTimeout === 'function') setTimeout(tryClick, 0);
+      else tryClick();
+    }
+
+    /**
+     * Open the settings panel directly on one section. Primary path: the
+     * `sidebar.settings` slot entry carries the shell's store handle, whose
+     * instance exposes `actions.openSection(id)` — the same action the
+     * onboarding coordinator uses, so the panel opens with the requested tab
+     * already active on both Web and Desktop. Fallback: open Settings through
+     * the ordinary path, then click the section's nav cell by index.
+     */
+    function openSettingsSection(ctx, sectionId) {
+      const slots = ctx && ctx.slots;
+      if (slots && typeof slots.entries === 'function') {
+        try {
+          const entry = slots.entries('sidebar.settings').find((e) => e && e.store);
+          const instance = entry && typeof entry.store.create === 'function' ? entry.store.create() : undefined;
+          const openSection = instance && instance.actions && instance.actions.openSection;
+          if (typeof openSection === 'function') {
+            openSection.call(instance.actions, sectionId);
+            return true;
+          }
+        } catch (e) { /* fall through to the open-then-click fallback */ }
+      }
+      if (!openSettings(ctx)) return false;
+      const slots2 = ctx && ctx.slots;
+      if (slots2 && typeof slots2.entries === 'function') {
+        try {
+          const rows = slots2.entries('settings.section')
+            .filter((e) => e && e.options && typeof e.options.id === 'string' && e.options.id)
+            .map((e) => ({ id: e.options.id, order: typeof e.options.order === 'number' ? e.options.order : 0 }))
+            .sort((a, b) => a.order - b.order);
+          const index = rows.findIndex((row) => row.id === sectionId);
+          if (index >= 0) selectSettingsSectionByIndex(index);
+        } catch (e) { /* settings opened without section navigation; that is still useful */ }
+      }
+      return true;
+    }
+
+    /**
+     * Resolve one slot entry's display label. Shell-registered sections pass
+     * their label through the shell's localized slot resolver, so the option
+     * may be a plain string or a zero-argument function returning one.
+     */
+    function sectionLabelText(entry) {
+      const label = entry && entry.options && entry.options.label;
+      if (typeof label === 'string' && label) return label;
+      if (typeof label === 'function') {
+        try { const value = label(); if (typeof value === 'string' && value) return value; } catch (e) { /* fall back to the id */ }
+      }
+      return '';
+    }
+
+    /** Extra search terms for the shell's built-in settings sections. */
+    const SECTION_KEYWORDS = {
+      account: ['账户', '账号', '登录'],
+      general: ['通用', '偏好'],
+      models: ['模型', 'model', 'moxing'],
+      plugins: ['插件', '扩展', 'chajian'],
+      'agent-loop': ['agent', '循环', 'loop'],
+      shell: ['shell', '终端'],
+      'web-search': ['搜索', '联网', 'search'],
+      subagent: ['子代理', 'subagent'],
+      'session-log': ['日志', 'log'],
+      'archived-sessions': ['归档', 'archive'],
+      'agent-presets': ['预设', 'preset', 'yushe'],
+    };
+
+    /**
+     * Mirror the settings shell's section catalog into one palette command
+     * per section ("Settings → Models" …), so users can jump straight to a
+     * tab instead of opening Settings and navigating. Third-party sections
+     * (`plugin-config-*`) appear here too, because they register on the same
+     * slot. The list refreshes with slot declarations and locale changes.
+     */
+    function installSettingsSectionCommands(ctx) {
+      const slots = ctx && ctx.slots;
+      if (!slots || typeof slots.entries !== 'function') return undefined;
+      const t = translator(svc(ctx, 'locale'));
+      const owned = new Map();
+      const sync = () => {
+        let rows;
+        try { rows = slots.entries('settings.section'); } catch (e) { return; }
+        const sections = (Array.isArray(rows) ? rows : [])
+          .filter((entry) => entry && entry.options && typeof entry.options.id === 'string' && entry.options.id)
+          .map((entry) => ({
+            id: entry.options.id,
+            order: typeof entry.options.order === 'number' ? entry.options.order : 0,
+            label: sectionLabelText(entry),
+          }))
+          .sort((a, b) => a.order - b.order);
+        const next = new Set();
+        const prefix = t('cmd.settingsSection.prefix', 'Settings');
+        for (const section of sections) {
+          const commandId = 'dsh-spotlight.settings-section.' + section.id;
+          next.add(commandId);
+          const previous = owned.get(commandId);
+          if (previous) { try { previous(); } catch (e) { /* ignore */ } owned.delete(commandId); }
+          const title = `${prefix} → ${section.label || section.id}`;
+          try {
+            owned.set(commandId, store.register({
+              id: commandId,
+              title,
+              groupKey: 'group.navigate',
+              keywords: ['settings', '设置', 'shezhi', section.id, section.label, ...(SECTION_KEYWORDS[section.id] || [])].filter(Boolean),
+              run: (c) => { openSettingsSection(c, section.id); },
+            }));
+          } catch (e) {
+            try { console.warn('dsh-spotlight: cannot expose settings section', section.id, e); } catch (_) { /* ignore */ }
+          }
+        }
+        for (const [commandId, dispose] of [...owned]) {
+          if (next.has(commandId)) continue;
+          try { dispose(); } catch (e) { /* ignore */ }
+          owned.delete(commandId);
+        }
+      };
+      let unsubscribeSlots;
+      let unsubscribeLocale;
+      try { unsubscribeSlots = slots.subscribe('settings.section', sync); } catch (e) { unsubscribeSlots = undefined; }
+      const locale = svc(ctx, 'locale');
+      try { if (locale && typeof locale.subscribe === 'function') unsubscribeLocale = locale.subscribe(sync); } catch (e) { unsubscribeLocale = undefined; }
+      sync();
+      return () => {
+        if (typeof unsubscribeSlots === 'function') { try { unsubscribeSlots(); } catch (e) { /* ignore */ } }
+        if (typeof unsubscribeLocale === 'function') { try { unsubscribeLocale(); } catch (e) { /* ignore */ } }
+        for (const dispose of owned.values()) { try { dispose(); } catch (e) { /* ignore */ } }
+        owned.clear();
+      };
+    }
+
+    /**
      * The on-screen Session id. `uiWorkspace.selection` is the authoritative
      * selection; `sidebarRight.mounted` is the same id from the surface that
      * owns the right column, and covers compositions where the Workspace
@@ -708,6 +862,7 @@ window.__ModuleLoader__.load({
         'group.appearance': 'Appearance',
         'group.shortcuts': 'Shortcuts',
         'cmd.settings.title': 'Open Settings',
+        'cmd.settingsSection.prefix': 'Settings',
         'cmd.plugins.title': 'Open Plugins',
         'cmd.searchSessions.title': 'Search Sessions',
         'cmd.addWorkspace.title': 'Add Workspace',
@@ -735,6 +890,7 @@ window.__ModuleLoader__.load({
         'group.appearance': '外观',
         'group.shortcuts': '快捷键',
         'cmd.settings.title': '打开设置',
+        'cmd.settingsSection.prefix': '设置',
         'cmd.plugins.title': '打开插件页',
         'cmd.searchSessions.title': '搜索会话',
         'cmd.addWorkspace.title': '添加工作区',
@@ -1005,6 +1161,11 @@ window.__ModuleLoader__.load({
       effect(() => registerDicts(locale), 'dsh-spotlight: locale dictionaries');
 
       effect(() => registerBuiltinCommands(ctx), 'dsh-spotlight: built-in commands');
+
+      // Settings-section commands mirror the shell's section catalog; the
+      // slots face is part of the client context, so install directly. The
+      // installer no-ops (and returns no disposer) when the face is absent.
+      effect(() => installSettingsSectionCommands(ctx), 'dsh-spotlight: settings sections');
 
       // The shortcuts service may mount after this plugin; wait for it with
       // `ctx.inject` instead of racing `ctx.get` during apply. The bare `/`

@@ -37,6 +37,10 @@
 - **内置命令。** 打开设置、插件页、搜索会话、添加工作区、键盘快捷键速查、新建会话、
   归档当前会话、压缩当前会话、收起/展开左侧栏、展开/收起右侧栏、工作区文件、
   深色/浅色/跟随系统主题、中英文切换。
+- **设置直达。** 设置页的每个分区都会生成一条「设置 → 分区」命令（设置 → 通用、
+  设置 → 模型、设置 → 插件……），执行后直接打开设置并定位到该标签页。分区目录
+  来自 shell 的 `settings.section` 插槽并随其刷新，第三方插件注册的分区也会自动
+  出现。Store 句柄不可用时回退为打开设置后按序点击分区导航。
 - **快捷键镜像。** 其余可配置的 shell 快捷键会自动出现在 **快捷键** 分组中，
   并显示当前键帽。执行时走 shell 自身的快捷键解析，因此重命名、分叉、分栏、
   全屏、终端以及未来新增的命令都无需逐个接入。关闭窗口/页面和删除类动作会被排除。
@@ -62,10 +66,10 @@
 ### 从 GitHub 安装
 
 ```bash
-dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.2
+dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.3
 ```
 
-省略 `#v1.0.2` 可跟踪默认分支。
+省略 `#v1.0.3` 可跟踪默认分支。
 
 ### 从本地目录安装
 
@@ -253,7 +257,7 @@ npm test
 手动验证时，启动任意组合了本 bundle 的 profile：
 
 ```bash
-dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.2
+dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.3
 dsh --profile web --no-open --port 0
 ```
 

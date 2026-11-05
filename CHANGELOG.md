@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.3 — 2026-11-05
+
+- Add settings deep links: every entry in the shell's `settings.section` slot
+  becomes a `Settings → Section` palette command that opens the panel directly
+  on that tab through the settings store's `openSection(id)` action, falling
+  back to open-then-click when the store handle is unreachable.
+- Third-party sections (for example `plugin-config-*`) are picked up
+  automatically; the catalog refreshes with slot declarations and locale
+  changes.
+
 ## 1.0.2 — 2026-11-05
 
 - Sharpen the plugin description across `package.json`, both READMEs, and the
