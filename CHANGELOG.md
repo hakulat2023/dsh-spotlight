@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.2 — 2026-11-05
+
+- Sharpen the plugin description across `package.json`, both READMEs, and the
+  locale dictionaries: lead with the one-shortcut pitch (`Cmd/Ctrl+Shift+P` or
+  `/`) instead of a plain feature list.
+- Bump pinned install commands to `#v1.0.2`.
+
 ## 1.0.1 — 2026-11-03
 
 - Match the palette panel to the DSH input surface with

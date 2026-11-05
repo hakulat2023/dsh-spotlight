@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Spotlight",
-    "description": "Command palette: press Cmd/Ctrl+Shift+P (or / outside a text field) to search and jump to settings, plugins, keyboard shortcuts, themes and common actions. Other plugins can contribute commands through the spotlight service."
+    "description": "One shortcut, everything at your fingertips: press Cmd/Ctrl+Shift+P (or / outside a text field) to summon the command palette and launch pages, panels, sessions, themes, and commands in seconds. Other plugins can contribute commands via the spotlight service."
   }
 }

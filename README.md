@@ -4,10 +4,10 @@
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![DSH plugin](https://img.shields.io/badge/topic-dsh--plugin-0b7285)](https://github.com/topics/dsh-plugin)
 
-A Spotlight-style command palette for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
-Press `Cmd/Ctrl+Shift+P` anywhere, or `/` outside a text field, then search and
-run settings, plugins, sessions, shortcuts, themes, and any command another
-client plugin registers.
+One shortcut, everything at your fingertips. Press `Cmd/Ctrl+Shift+P` anywhere,
+or `/` outside a text field, to summon a Spotlight-style palette for
+[DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) — launch
+pages, panels, sessions, themes, and any command other plugins register, in seconds.
 
 English | [中文](README.zh.md)
 
@@ -71,10 +71,10 @@ The package is a DSH **bundle**: `package.json` declares `dsh.bundle.patch` and
 ### From GitHub
 
 ```bash
-dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.1
+dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.2
 ```
 
-Omit `#v1.0.1` to track the default branch.
+Omit `#v1.0.2` to track the default branch.
 
 ### From a local checkout
 
@@ -290,7 +290,7 @@ GitHub Actions workflow in `.github/workflows/test.yml`.
 For manual verification, boot any profile that composes the bundle:
 
 ```bash
-dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.1
+dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.2
 dsh --profile web --no-open --port 0
 ```
 

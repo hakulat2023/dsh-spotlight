@@ -4,8 +4,8 @@
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![DSH plugin](https://img.shields.io/badge/topic-dsh--plugin-0b7285)](https://github.com/topics/dsh-plugin)
 
-DeepSeek Harness 的 Spotlight 风格命令面板。按 `Cmd/Ctrl+Shift+P`（或在非输入框位置按 `/`），
-搜索并执行设置、插件、会话、快捷键、主题，以及其他客户端插件注册的命令。
+一个快捷键，直达一切。按 `Cmd/Ctrl+Shift+P`（或在非输入框位置按 `/`）唤出 Spotlight 风格命令面板，
+页面、面板、会话、主题、命令——瞬间调起。
 
 [English](README.md) | 中文
 
@@ -62,10 +62,10 @@ DeepSeek Harness 的 Spotlight 风格命令面板。按 `Cmd/Ctrl+Shift+P`（或
 ### 从 GitHub 安装
 
 ```bash
-dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.1
+dsh plugin --profile desktop add github:hakulat2023/dsh-spotlight#v1.0.2
 ```
 
-省略 `#v1.0.1` 可跟踪默认分支。
+省略 `#v1.0.2` 可跟踪默认分支。
 
 ### 从本地目录安装
 
@@ -253,7 +253,7 @@ npm test
 手动验证时，启动任意组合了本 bundle 的 profile：
 
 ```bash
-dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.1
+dsh plugin --profile web add github:hakulat2023/dsh-spotlight#v1.0.2
 dsh --profile web --no-open --port 0
 ```
 

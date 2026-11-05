@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Spotlight 聚焦",
-    "description": "命令面板：按 Cmd/Ctrl+Shift+P（或在非输入框位置按 /）唤起，模糊搜索并快速跳转设置页、插件页、键盘快捷键、主题切换等常用功能。其他插件可通过 spotlight 服务注册自己的命令。"
+    "description": "一个快捷键，直达一切：Cmd/Ctrl+Shift+P（或非输入框位置按 /）唤出命令面板，页面、面板、会话、主题、命令瞬间调起。其他插件也可通过 spotlight 服务注册自己的命令。"
   }
 }

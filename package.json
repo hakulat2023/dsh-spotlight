@@ -1,7 +1,7 @@
 {
   "name": "dsh-spotlight",
-  "version": "1.0.1",
-  "description": "Spotlight-style command palette for DeepSeek Harness: settings, plugins, sessions, keyboard shortcuts, themes, and any registered command.",
+  "version": "1.0.2",
+  "description": "One shortcut, everything at your fingertips — a Spotlight-style command palette for DeepSeek Harness. Launch pages, panels, sessions, themes, and any registered command in seconds.",
   "type": "module",
   "main": "index.js",
   "exports": {
